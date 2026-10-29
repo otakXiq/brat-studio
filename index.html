@@ -1,74 +1,206 @@
-
-<!DOCTYPE html>
+<!doctype html>
 <html lang="id">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="theme-color" content="#101010">
-  <title>BRAT STUDIO — Sticker Generator</title>
-  <link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#101010" />
+  <meta name="description" content="Bikin stiker BRAT kamu sendiri. Edit, preview, dan download PNG gratis." />
+  <title>BRAT STUDIO — Sticker Lab</title>
+  <link rel="icon" href="favicon.svg" type="image/svg+xml" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <style>
+    :root { --bg:#101010; --panel:#191919; --border:#303030; --green:#8bd500; --muted:#929292; --white:#f6f6f6; }
+    * { box-sizing:border-box; }
+    html { color-scheme:dark; }
+    body { margin:0; background:var(--bg); color:var(--white); font-family:Inter,Arial,Helvetica,sans-serif; min-height:100vh; }
+    header { height:66px; border-bottom:1px solid #292929; display:flex; align-items:center; justify-content:space-between; padding:0 clamp(20px,6.3vw,110px); }
+    .brand { font-size:17px; font-weight:900; letter-spacing:-.7px; color:white; text-decoration:none; }
+    .brand span { color:var(--green); }
+    .lab { font-size:10px; letter-spacing:2px; font-weight:800; color:var(--green); }
+    main { max-width:1050px; margin:0 auto; padding:60px 24px 72px; display:grid; grid-template-columns:minmax(0,1fr) minmax(380px,495px); gap:clamp(40px,7vw,100px); align-items:start; }
+    .intro { padding-top:52px; }
+    .eyebrow { color:var(--green); letter-spacing:2px; font-weight:800; font-size:11px; margin:0 0 24px; }
+    h1 { font-size:clamp(58px,6.3vw,88px); line-height:.89; letter-spacing:-6px; margin:0; font-weight:900; }
+    h1 span { display:block; color:var(--green); }
+    .intro p { color:var(--muted); font-size:13px; line-height:1.8; max-width:320px; margin-top:28px; }
+    .mini-note { display:flex; gap:9px; align-items:center; margin-top:36px; color:#686868; font-size:10px; letter-spacing:.7px; text-transform:uppercase; font-weight:700; }
+    .mini-note i { width:7px;height:7px;background:var(--green);border-radius:50%;display:inline-block;box-shadow:0 0 12px #8bd54466; }
+    .studio { background:var(--panel); border:1px solid #303030; border-radius:17px; padding:19px; box-shadow:0 22px 65px #0002; }
+    .studio-top { display:flex; justify-content:space-between; align-items:center; margin:0 0 15px; font-size:10px; letter-spacing:1.4px; font-weight:900; }
+    .live { color:var(--green); display:flex; gap:6px; align-items:center; }
+    .live:before { content:""; width:4px;height:4px;background:var(--green);border-radius:50%; }
+    .preview-wrap { position:relative; width:100%; aspect-ratio:1; overflow:hidden; border-radius:8px; background:var(--green); }
+    canvas { display:block; width:100%; height:100%; }
+    .controls { padding-top:21px; display:grid; gap:16px; }
+    .field-label { display:flex; justify-content:space-between; align-items:center; font-size:11px; font-weight:750; margin-bottom:9px; }
+    .field-label output { color:var(--green); font-weight:800; }
+    input[type="text"] { width:100%; height:47px; border:1px solid #333; border-radius:9px; background:#111; padding:0 13px; color:white; outline:none; font:500 14px Inter,Arial,sans-serif; }
+    input[type="text"]:focus { border-color:var(--green); box-shadow:0 0 0 2px #8bd50020; }
+    .swatches { display:flex; gap:10px; flex-wrap:wrap; align-items:center; }
+    .swatch { width:32px; height:32px; border-radius:50%; border:2px solid #555; cursor:pointer; position:relative; padding:0; }
+    .swatch[aria-pressed="true"] { outline:2px solid white; outline-offset:3px; border-color:#111; }
+    .swatch:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible { outline:2px solid var(--green); outline-offset:3px; }
+    .custom-color { width:32px; height:32px; border:2px solid #555; border-radius:50%; overflow:hidden; position:relative; background:#252525; display:grid; place-items:center; cursor:pointer; }
+    .custom-color span { font-size:20px; font-weight:500; line-height:1; color:white; pointer-events:none; }
+    .custom-color input { position:absolute; inset:-10px; width:52px; height:52px; opacity:0; cursor:pointer; }
+    input[type="range"] { width:100%; accent-color:var(--green); cursor:pointer; margin:2px 0 0; }
+    .select-row { display:grid; grid-template-columns:1fr 1fr; gap:12px; }
+    select { width:100%; height:42px; border-radius:8px; border:1px solid #333; background:#111; color:#eee; padding:0 10px; font:500 12px Inter,Arial,sans-serif; }
+    .toggle-row { display:flex; align-items:center; justify-content:space-between; gap:12px; font-size:11px; font-weight:700; }
+    .toggle-row small { display:block; color:var(--muted); font-size:10px; font-weight:500; margin-top:4px; }
+    .switch { width:38px; height:22px; border:0; border-radius:20px; background:#444; padding:3px; cursor:pointer; flex-shrink:0; }
+    .switch span { display:block; width:16px;height:16px;background:#fff;border-radius:50%;transition:transform .18s; }
+    .switch[aria-checked="true"] { background:var(--green); }
+    .switch[aria-checked="true"] span { transform:translateX(16px); background:#111; }
+    .actions { display:grid; grid-template-columns:1fr auto; gap:9px; margin-top:2px; }
+    .download { border:0; border-radius:9px; background:var(--green); color:#111; min-height:47px; padding:0 18px; font:850 12px Inter,Arial,sans-serif; cursor:pointer; transition:transform .15s,filter .15s; }
+    .download:hover { filter:brightness(1.07); transform:translateY(-1px); }
+    .reset { border:1px solid #393939; border-radius:9px; background:#222; color:#eee; padding:0 15px; font:700 12px Inter,Arial,sans-serif; cursor:pointer; }
+    .footer { text-align:center; color:#555; font-size:10px; padding:0 20px 26px; letter-spacing:.4px; }
+    .footer b { color:#777; }
+    @media (max-width:800px) {
+      main { grid-template-columns:1fr; max-width:560px; gap:35px; padding-top:40px; }
+      .intro { padding-top:0; }
+      h1 { font-size:clamp(60px,13vw,82px); }
+      .intro p { margin-top:20px; }
+      .mini-note { display:none; }
+    }
+    @media (max-width:440px) {
+      header { padding:0 18px; height:60px; }
+      main { padding:30px 15px 45px; }
+      .studio { padding:13px; border-radius:13px; }
+      .controls { gap:15px; }
+      h1 { letter-spacing:-4px; }
+    }
+  </style>
 </head>
 <body>
-  <header class="header">
-    <a class="logo" href="#">BRAT<span>STUDIO</span></a>
-    <span class="tag">STICKER LAB 001</span>
+  <header>
+    <a class="brand" href="#" aria-label="Brat Studio home">BRAT <span>STUDIO</span></a>
+    <div class="lab">STICKER LAB 001</div>
   </header>
-
-  <main class="layout">
+  <main>
     <section class="intro">
-      <p class="eyebrow">YOUR TEXT. YOUR VIBE.</p>
-      <h1>Make it<br><span>BRAT.</span></h1>
-      <p class="description">Bikin stiker aesthetic lu sendiri. Edit, preview, download. Gratis.</p>
+      <div class="eyebrow">YOUR TEXT. YOUR VIBE.</div>
+      <h1>Make it <span>BRAT.</span></h1>
+      <p>Bikin stiker aesthetic lu sendiri. Edit, preview, download. Gratis, langsung dari browser.</p>
+      <div class="mini-note"><i></i> No account · No watermark · PNG export</div>
     </section>
-
-    <section class="editor">
-      <div class="preview-label">
-        <span>LIVE PREVIEW</span>
-        <span class="live-dot">● LIVE</span>
-      </div>
-
-      <div class="preview">
-        <canvas id="canvas" width="1024" height="1024"></canvas>
-      </div>
-
+    <section class="studio" aria-label="Brat sticker generator">
+      <div class="studio-top"><span>LIVE PREVIEW</span><span class="live">LIVE</span></div>
+      <div class="preview-wrap"><canvas id="sticker" width="900" height="900" aria-label="Preview stiker"></canvas></div>
       <div class="controls">
-        <label for="text">Teks stiker</label>
-        <input id="text" type="text" value="brat" maxlength="40"
-          placeholder="Tulis teks lu...">
-
-        <label>Warna background</label>
-        <div class="colors">
-          <button class="swatch active" data-color="#8ACE00" style="--swatch:#8ACE00" aria-label="Hijau"></button>
-          <button class="swatch" data-color="#F4A7BB" style="--swatch:#F4A7BB" aria-label="Pink"></button>
-          <button class="swatch" data-color="#B6D9F5" style="--swatch:#B6D9F5" aria-label="Biru"></button>
-          <button class="swatch" data-color="#C7B8F5" style="--swatch:#C7B8F5" aria-label="Ungu"></button>
-          <button class="swatch" data-color="#171717" style="--swatch:#171717" aria-label="Hitam"></button>
-          <label class="custom-color" title="Pilih warna sendiri">
-            <input id="customColor" type="color" value="#8ACE00">
-            <span>+</span>
-          </label>
+        <div>
+          <label class="field-label" for="stickerText"><span>Teks stiker</span><span id="charCount" style="color:#777;font-weight:500">4 / 32</span></label>
+          <input id="stickerText" type="text" maxlength="32" value="brat" autocomplete="off" placeholder="Tulis teks lu..." />
         </div>
-
-        <div class="range-heading">
-          <label for="size">Ukuran teks</label>
-          <output id="sizeValue">190</output>
+        <div>
+          <div class="field-label"><span>Warna background</span><span id="colorValue" style="color:#888;font-weight:500">#8BD500</span></div>
+          <div class="swatches" role="group" aria-label="Pilih warna background">
+            <button class="swatch" style="background:#8bd500" data-color="#8bd500" aria-label="Hijau brat" aria-pressed="true"></button>
+            <button class="swatch" style="background:#f3a4b8" data-color="#f3a4b8" aria-label="Pink" aria-pressed="false"></button>
+            <button class="swatch" style="background:#b8d9ed" data-color="#b8d9ed" aria-label="Biru muda" aria-pressed="false"></button>
+            <button class="swatch" style="background:#c6b5f3" data-color="#c6b5f3" aria-label="Ungu" aria-pressed="false"></button>
+            <button class="swatch" style="background:#171717" data-color="#171717" aria-label="Hitam" aria-pressed="false"></button>
+            <label class="custom-color" title="Pilih warna sendiri"><span>+</span><input id="customColor" type="color" value="#8bd500" aria-label="Pilih warna custom"></label>
+          </div>
         </div>
-        <input id="size" type="range" min="80" max="330" value="190">
-
-        <div class="range-heading">
-          <label for="blur">Efek blur</label>
-          <output id="blurValue">2 px</output>
+        <div>
+          <div class="field-label"><label for="fontSize">Ukuran teks</label><output id="fontSizeValue">190</output></div>
+          <input id="fontSize" type="range" min="70" max="300" value="190" />
         </div>
-        <input id="blur" type="range" min="0" max="8" step="0.5" value="2">
-
-        <button id="caseButton" class="secondary">Aa / UPPERCASE</button>
-        <button id="download" class="download">↓ DOWNLOAD PNG</button>
-        <p id="status" class="status" aria-live="polite">Siap bikin stiker lu.</p>
+        <div class="select-row">
+          <div><label class="field-label" for="fontStyle">Gaya font</label><select id="fontStyle"><option value="normal" selected>Lurus / Classic</option><option value="italic">Italic / Original vibe</option></select></div>
+          <div><label class="field-label" for="fontWeight">Ketebalan</label><select id="fontWeight"><option value="400">Regular</option><option value="500">Medium</option><option value="700">Bold</option><option value="900">Extra bold</option></select></div>
+        </div>
+        <div class="toggle-row"><div>Warna teks putih<small>Matikan untuk teks hitam</small></div><button class="switch" id="textColorToggle" role="switch" aria-checked="false" aria-label="Gunakan teks putih"><span></span></button></div>
+        <div class="actions"><button class="download" id="downloadBtn">↓ &nbsp; DOWNLOAD PNG</button><button class="reset" id="resetBtn">Reset</button></div>
       </div>
     </section>
   </main>
+  <div class="footer">MADE FOR YOUR VIBE <b>·</b> BRAT STUDIO <b>·</b> FREE PNG EXPORT</div>
+  <script>
+    (() => {
+      const canvas = document.getElementById('sticker');
+      const ctx = canvas.getContext('2d');
+      const textInput = document.getElementById('stickerText');
+      const sizeInput = document.getElementById('fontSize');
+      const sizeOutput = document.getElementById('fontSizeValue');
+      const fontStyle = document.getElementById('fontStyle');
+      const fontWeight = document.getElementById('fontWeight');
+      const customColor = document.getElementById('customColor');
+      const colorValue = document.getElementById('colorValue');
+      const charCount = document.getElementById('charCount');
+      const toggle = document.getElementById('textColorToggle');
+      let bg = '#8bd500';
+      let whiteText = false;
 
-  <footer>BRAT STUDIO © 2026 · MADE FOR YOUR CREATIVITY</footer>
-  <script src="script.js"></script>
+      function draw() {
+        const W = canvas.width, H = canvas.height;
+        ctx.clearRect(0, 0, W, H);
+        ctx.fillStyle = bg;
+        ctx.fillRect(0, 0, W, H);
+        const value = textInput.value || '';
+        charCount.textContent = `${value.length} / 32`;
+        sizeOutput.value = sizeInput.value;
+        sizeOutput.textContent = sizeInput.value;
+        colorValue.textContent = bg.toUpperCase();
+        const pad = 90;
+        let size = Number(sizeInput.value);
+        const style = fontStyle.value;
+        const weight = fontWeight.value;
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.fillStyle = whiteText ? '#f7f7f7' : '#050505';
+        ctx.font = `${style} ${weight} ${size}px Arial, Helvetica, sans-serif`;
+        while (value && ctx.measureText(value).width > W - pad * 2 && size > 24) {
+          size -= 2;
+          ctx.font = `${style} ${weight} ${size}px Arial, Helvetica, sans-serif`;
+        }
+        // The classic BRAT look is deliberately simple, centered, and clean.
+        ctx.fillText(value, W / 2, H / 2 + 3, W - pad * 2);
+      }
+
+      textInput.addEventListener('input', draw);
+      sizeInput.addEventListener('input', draw);
+      fontStyle.addEventListener('change', draw);
+      fontWeight.addEventListener('change', draw);
+      document.querySelectorAll('.swatch').forEach(btn => {
+        btn.addEventListener('click', () => {
+          bg = btn.dataset.color;
+          document.querySelectorAll('.swatch').forEach(b => b.setAttribute('aria-pressed', String(b === btn)));
+          customColor.value = bg;
+          draw();
+        });
+      });
+      customColor.addEventListener('input', () => {
+        bg = customColor.value;
+        document.querySelectorAll('.swatch').forEach(b => b.setAttribute('aria-pressed', 'false'));
+        draw();
+      });
+      toggle.addEventListener('click', () => {
+        whiteText = !whiteText;
+        toggle.setAttribute('aria-checked', String(whiteText));
+        draw();
+      });
+      document.getElementById('downloadBtn').addEventListener('click', () => {
+        draw();
+        const link = document.createElement('a');
+        link.download = `brat-sticker-${(textInput.value.trim() || 'sticker').toLowerCase().replace(/[^a-z0-9]+/g, '-')}.png`;
+        link.href = canvas.toDataURL('image/png');
+        link.click();
+      });
+      document.getElementById('resetBtn').addEventListener('click', () => {
+        textInput.value = 'brat'; sizeInput.value = '190'; fontStyle.value = 'normal'; fontWeight.value = '400';
+        bg = '#8bd500'; whiteText = false; customColor.value = bg;
+        toggle.setAttribute('aria-checked', 'false');
+        document.querySelectorAll('.swatch').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.color === bg)));
+        draw();
+      });
+      draw();
+    })();
+  </script>
 </body>
 </html>
