@@ -1,0 +1,74 @@
+
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#101010">
+  <title>BRAT STUDIO — Sticker Generator</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header class="header">
+    <a class="logo" href="#">BRAT<span>STUDIO</span></a>
+    <span class="tag">STICKER LAB 001</span>
+  </header>
+
+  <main class="layout">
+    <section class="intro">
+      <p class="eyebrow">YOUR TEXT. YOUR VIBE.</p>
+      <h1>Make it<br><span>BRAT.</span></h1>
+      <p class="description">Bikin stiker aesthetic lu sendiri. Edit, preview, download. Gratis.</p>
+    </section>
+
+    <section class="editor">
+      <div class="preview-label">
+        <span>LIVE PREVIEW</span>
+        <span class="live-dot">● LIVE</span>
+      </div>
+
+      <div class="preview">
+        <canvas id="canvas" width="1024" height="1024"></canvas>
+      </div>
+
+      <div class="controls">
+        <label for="text">Teks stiker</label>
+        <input id="text" type="text" value="brat" maxlength="40"
+          placeholder="Tulis teks lu...">
+
+        <label>Warna background</label>
+        <div class="colors">
+          <button class="swatch active" data-color="#8ACE00" style="--swatch:#8ACE00" aria-label="Hijau"></button>
+          <button class="swatch" data-color="#F4A7BB" style="--swatch:#F4A7BB" aria-label="Pink"></button>
+          <button class="swatch" data-color="#B6D9F5" style="--swatch:#B6D9F5" aria-label="Biru"></button>
+          <button class="swatch" data-color="#C7B8F5" style="--swatch:#C7B8F5" aria-label="Ungu"></button>
+          <button class="swatch" data-color="#171717" style="--swatch:#171717" aria-label="Hitam"></button>
+          <label class="custom-color" title="Pilih warna sendiri">
+            <input id="customColor" type="color" value="#8ACE00">
+            <span>+</span>
+          </label>
+        </div>
+
+        <div class="range-heading">
+          <label for="size">Ukuran teks</label>
+          <output id="sizeValue">190</output>
+        </div>
+        <input id="size" type="range" min="80" max="330" value="190">
+
+        <div class="range-heading">
+          <label for="blur">Efek blur</label>
+          <output id="blurValue">2 px</output>
+        </div>
+        <input id="blur" type="range" min="0" max="8" step="0.5" value="2">
+
+        <button id="caseButton" class="secondary">Aa / UPPERCASE</button>
+        <button id="download" class="download">↓ DOWNLOAD PNG</button>
+        <p id="status" class="status" aria-live="polite">Siap bikin stiker lu.</p>
+      </div>
+    </section>
+  </main>
+
+  <footer>BRAT STUDIO © 2026 · MADE FOR YOUR CREATIVITY</footer>
+  <script src="script.js"></script>
+</body>
+</html>
